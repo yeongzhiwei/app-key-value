@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Map;
 import java.util.Optional;
 
 import com.google.gson.Gson;
@@ -49,17 +50,27 @@ public class AppKeyRecordControllerTests {
     }
 
     @Test
+    public void getInvalidRecordShouldReturnNotFound() throws Exception {
+        when(repo.findByAppAndKey("app1", "key1")).thenThrow(new AppKeyRecordNotFoundException("app1", "key1"));
+
+        this.mockMvc.perform(get("/apps/app1/keys/key1"))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.message").exists());
+    }
+
+    @Test
     public void postValidRecordShouldReturnCreated() throws Exception {
         AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1");
 
         when(repo.save(any(AppKeyRecord.class))).thenReturn(record);
 
         Gson gson = new Gson();
-        String jsonRecord = gson.toJson(record);
+        String jsonRecord = gson.toJson(Map.of("key", "key1", "value", "value1"));
 
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonRecord))
+            .andDo(print())
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.value").value("value1"));
     }
