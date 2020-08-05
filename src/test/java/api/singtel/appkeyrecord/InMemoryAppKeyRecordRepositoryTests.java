@@ -6,27 +6,47 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class InMemoryAppKeyRecordRepositoryTests {
 
+    private InMemoryAppKeyRecordRepository repo = new InMemoryAppKeyRecordRepository();
+
+    @BeforeEach
+    public void seedData() {
+        repo.save(new AppKeyRecord("app1", "key1", "value1"));
+    }
+
     @Test
-    public void saveGetDeleteShouldUpdateRepository() {
-        InMemoryAppKeyRecordRepository repo = new InMemoryAppKeyRecordRepository();
-        
-        AppKeyRecord savedRecord = repo.save(new AppKeyRecord("app1", "key1", "value1"));
-        assertEquals("app1", savedRecord.getApp());
-        assertEquals("key1", savedRecord.getKey());
-        assertEquals("value1", savedRecord.getValue());
-
-        Optional<AppKeyRecord> validOptionalRecord = repo.findByAppAndKey("app1", "key1");
-        assertTrue(validOptionalRecord.isPresent());
-        AppKeyRecord validRecord = validOptionalRecord.get();
+    public void saveGivenRecordShouldReturnRecord() {
+        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1");
+        AppKeyRecord savedRecord = repo.save(record);
+        assertEquals(record, savedRecord);
+    }
+    
+    @Test
+    public void findByAppAndKeyGivenValidArgsShouldReturnRecordOptional() {
+        Optional<AppKeyRecord> optional = repo.findByAppAndKey("app1", "key1");
+        assertTrue(optional.isPresent());
+        AppKeyRecord validRecord = optional.get();
         assertEquals("value1", validRecord.getValue());
+    }
 
-        assertFalse(repo.findByAppAndKey("app2", "key1").isPresent());
-        assertFalse(repo.findByAppAndKey("app1", "key2").isPresent());
+    @Test
+    public void findByAppAndKeyGivenInvalidAppShouldReturnNullOptional() {
+        Optional<AppKeyRecord> optional = repo.findByAppAndKey("app2", "key1");
+        assertFalse(optional.isPresent());
+    }
 
+    @Test
+    public void findByAppAndKeyGivenInvalidKeyShouldReturnNullOptional() {
+        Optional<AppKeyRecord> optional = repo.findByAppAndKey("app1", "key2");
+        assertFalse(optional.isPresent());
+    }
+
+    @Test
+    public void deleteByAppAndKeyGivenValidArgsShouldUpdateRepository() {
         repo.deleteByAppAndKey("app1", "key1");
         assertFalse(repo.findByAppAndKey("app1", "key1").isPresent());
     }

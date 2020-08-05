@@ -18,6 +18,10 @@ public class InMemoryAppKeyRecordRepository implements AppKeyRecordRepository {
     public Optional<AppKeyRecord> findByAppAndKey(String app, String key) {
         String mapKey = getMapKey(app, key);
         AppKeyRecord record = records.get(mapKey);
+        if (record != null && AppKeyRecordUtils.isExpired(record)) {
+            delete(record);
+            return Optional.empty();
+        }
         return Optional.ofNullable(record);
     }
 
@@ -30,6 +34,10 @@ public class InMemoryAppKeyRecordRepository implements AppKeyRecordRepository {
     
     private String getMapKey(String app, String key) {
         return app + ":" + key;
+    }
+
+    private void delete(AppKeyRecord record) {
+        deleteByAppAndKey(record.getApp(), record.getKey());
     }
 
 }
