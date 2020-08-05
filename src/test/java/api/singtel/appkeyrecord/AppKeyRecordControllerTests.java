@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Optional;
 
+import com.google.gson.Gson;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -52,9 +54,12 @@ public class AppKeyRecordControllerTests {
 
         when(repo.save(any(AppKeyRecord.class))).thenReturn(record);
 
+        Gson gson = new Gson();
+        String jsonRecord = gson.toJson(record);
+
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"key\":\"key1\",\"value\":\"value1\"}"))
+                .content(jsonRecord))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.value").value("value1"));
     }
