@@ -1,10 +1,10 @@
 package api.singtel.appkeyrecord;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -36,7 +36,6 @@ public class AppKeyRecordControllerTests {
         when(repo.findByAppAndKey("app1", "key1")).thenReturn(Optional.ofNullable(null));
 
         this.mockMvc.perform(get("/apps/app1/keys/key1"))
-            .andDo(print())
             .andExpect(status().isNotFound());
     }
 
@@ -70,9 +69,80 @@ public class AppKeyRecordControllerTests {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonRecord))
-            .andDo(print())
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.value").value("value1"));
+    }
+
+    @Test
+    public void postInvalidAppShouldReturnBadRequest() throws Exception {
+        Gson gson = new Gson();
+        String jsonRecord = gson.toJson(Map.of("key", "key1", "value", "value1"));
+
+        this.mockMvc.perform(post("/apps/app1@/keys")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRecord))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(containsString("app")));
+    }
+    
+    @Test
+    public void postInvalidKeyShouldReturnBadRequest() throws Exception {
+        Gson gson = new Gson();
+        String jsonRecord = gson.toJson(Map.of("key", "key1@", "value", "value1"));
+
+        this.mockMvc.perform(post("/apps/app1/keys")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRecord))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(containsString("key")));
+    }
+    
+    @Test
+    public void postBlankKeyShouldReturnBadRequest() throws Exception {
+        Gson gson = new Gson();
+        String jsonRecord = gson.toJson(Map.of("key", "", "value", "value1"));
+
+        this.mockMvc.perform(post("/apps/app1@/keys")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRecord))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(containsString("key")));
+    }
+    
+    @Test
+    public void postMissingKeyShouldReturnBadRequest() throws Exception {
+        Gson gson = new Gson();
+        String jsonRecord = gson.toJson(Map.of("value", "value1"));
+
+        this.mockMvc.perform(post("/apps/app1@/keys")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRecord))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(containsString("key")));
+    }
+    
+    @Test
+    public void postBlankValueShouldReturnBadRequest() throws Exception {
+        Gson gson = new Gson();
+        String jsonRecord = gson.toJson(Map.of("key", "key1", "value", ""));
+
+        this.mockMvc.perform(post("/apps/app1@/keys")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRecord))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(containsString("value")));
+    }
+
+    @Test
+    public void postMissingValueShouldReturnBadRequest() throws Exception {
+        Gson gson = new Gson();
+        String jsonRecord = gson.toJson(Map.of("key", "key1"));
+
+        this.mockMvc.perform(post("/apps/app1@/keys")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonRecord))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(containsString("value")));
     }
 
 }

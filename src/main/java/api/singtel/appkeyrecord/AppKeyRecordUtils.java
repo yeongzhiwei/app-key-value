@@ -11,5 +11,14 @@ public class AppKeyRecordUtils {
         LocalDateTime expireAt = recordedAt.plusSeconds(ttl);
         return expireAt.isBefore(LocalDateTime.now());
     }
+
+    public static AppKeyRecord convertDTOtoAppKeyRecord(AppKeyRecordDTO dto, String app) {
+        return new AppKeyRecord(
+            app,
+            dto.getKey(),
+            dto.getValue(),
+            dto.getTtl()
+        );
+    }
     
 }

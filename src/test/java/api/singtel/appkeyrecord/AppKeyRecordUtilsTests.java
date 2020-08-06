@@ -1,5 +1,6 @@
 package api.singtel.appkeyrecord;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -24,4 +25,15 @@ public class AppKeyRecordUtilsTests {
         assertTrue(AppKeyRecordUtils.isExpired(hasExpiredRecord));
     }
 
+    @Test
+    public void convertDTOtoDomainGivenDTOShouldReturnAppKeyRecord() {
+        AppKeyRecordDTO dto = new AppKeyRecordDTO("key1", "value1", 10);
+        AppKeyRecord appKeyRecord = AppKeyRecordUtils.convertDTOtoAppKeyRecord(dto, "app1");
+
+        assertEquals("app1", appKeyRecord.getApp());
+        assertEquals("key1", appKeyRecord.getKey());
+        assertEquals("value1", appKeyRecord.getValue());
+        assertEquals(10, appKeyRecord.getTtl());
+    }
+    
 }
