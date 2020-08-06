@@ -2,7 +2,7 @@ package api.singtel.appkeyrecord;
 
 import java.time.LocalDateTime;
 
-public class AppKeyRecordUtils {
+public final class AppKeyRecordUtils {
 
     public static boolean isExpired(AppKeyRecord record) {
         int ttl = record.getTtl();
