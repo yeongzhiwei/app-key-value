@@ -2,11 +2,12 @@ package api.singtel.appkeyrecord;
 
 import java.util.Optional;
 
-public interface AppKeyRecordRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface AppKeyRecordRepository extends CrudRepository<AppKeyRecord, String> {
     
-    public void deleteByAppAndKey(String app, String key);
+    public void deleteAllByAppAndKey(String app, String key);
 
     public Optional<AppKeyRecord> findByAppAndKey(String app, String key);
 
-    public AppKeyRecord save(AppKeyRecord appkey);
 }

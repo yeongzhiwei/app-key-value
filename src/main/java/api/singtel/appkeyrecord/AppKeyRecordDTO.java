@@ -21,6 +21,6 @@ public class AppKeyRecordDTO {
     @NotBlank(message = "value is required")
     private String value;
 
-    private int ttl = 1000;
+    private Integer ttl = 1000;
 
 }

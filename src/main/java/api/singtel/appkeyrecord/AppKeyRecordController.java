@@ -18,15 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class AppKeyRecordController {
 
-    private AppKeyRecordRepository repo;
+    private AppKeyRecordService service;
 
-    public AppKeyRecordController(AppKeyRecordRepository repo) {
-        this.repo = repo;
+    public AppKeyRecordController(AppKeyRecordService service) {
+        this.service = service;
     }
 
     @GetMapping(path = "/{key}", produces = "application/json")
     public AppKeyRecord getAppKey(@PathVariable("app") String app, @PathVariable("key") String key) {
-        return repo.findByAppAndKey(app, key).orElseThrow(() -> new AppKeyRecordNotFoundException(app, key));
+        return service.get(app, key);
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
@@ -34,8 +34,7 @@ public class AppKeyRecordController {
     public AppKeyRecord createAppKey(
             @PathVariable("app") @Pattern(regexp = "^[\\p{Alnum}]{1,256}$", message = "app in the URI must be alphanumeric and up to 256 characters") String app, 
             @RequestBody @Valid AppKeyRecordDTO appKeyRecordDTO) {
-        AppKeyRecord appKeyRecord = AppKeyRecordUtils.convertDTOtoAppKeyRecord(appKeyRecordDTO, app);
-        return repo.save(appKeyRecord);
+        return service.create(app, appKeyRecordDTO);
     }
 
 }

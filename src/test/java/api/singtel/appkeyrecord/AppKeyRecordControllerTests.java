@@ -2,6 +2,7 @@ package api.singtel.appkeyrecord;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -9,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Map;
-import java.util.Optional;
 
 import com.google.gson.Gson;
 
@@ -19,29 +19,23 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class AppKeyRecordControllerTests {
     
     @MockBean
-    AppKeyRecordRepository repo;
+    AppKeyRecordService service;
     
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void getNullRecordShouldReturnNotFound() throws Exception {
-        when(repo.findByAppAndKey("app1", "key1")).thenReturn(Optional.ofNullable(null));
-
-        this.mockMvc.perform(get("/apps/app1/keys/key1"))
-            .andExpect(status().isNotFound());
-    }
-
-    @Test
     public void getValidRecordShouldReturnOk() throws Exception {
-        when(repo.findByAppAndKey("app1", "key1")).thenReturn(Optional.ofNullable(new AppKeyRecord("app1", "key1", "value1")));
+        when(service.get("app1", "key1")).thenReturn(new AppKeyRecord("app1", "key1", "value1"));
         
         this.mockMvc.perform(get("/apps/app1/keys/key1"))
             .andExpect(status().isOk())
@@ -50,7 +44,7 @@ public class AppKeyRecordControllerTests {
 
     @Test
     public void getInvalidRecordShouldReturnNotFound() throws Exception {
-        when(repo.findByAppAndKey("app1", "key1")).thenThrow(new AppKeyRecordNotFoundException("app1", "key1"));
+        when(service.get("app1", "key1")).thenThrow(new AppKeyRecordNotFoundException("app1", "key1"));
 
         this.mockMvc.perform(get("/apps/app1/keys/key1"))
             .andExpect(status().isNotFound())
@@ -60,8 +54,7 @@ public class AppKeyRecordControllerTests {
     @Test
     public void postValidRecordShouldReturnCreated() throws Exception {
         AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1");
-
-        when(repo.save(any(AppKeyRecord.class))).thenReturn(record);
+        when(service.create(eq("app1"), any(AppKeyRecordDTO.class))).thenReturn(record);
 
         Gson gson = new Gson();
         String jsonRecord = gson.toJson(Map.of("key", "key1", "value", "value1"));
