@@ -28,7 +28,7 @@ public class AppKeyRecordUtilsTests {
     @Test
     public void convertDTOtoDomainGivenDTOShouldReturnAppKeyRecord() {
         AppKeyRecordDTO dto = new AppKeyRecordDTO("key1", "value1", 10);
-        AppKeyRecord appKeyRecord = AppKeyRecordUtils.convertDTOtoAppKeyRecord(dto, "app1");
+        AppKeyRecord appKeyRecord = AppKeyRecordUtils.convertDTOtoAppKeyRecord(dto, "app1", 10);
 
         assertEquals("app1", appKeyRecord.getApp());
         assertEquals("key1", appKeyRecord.getKey());
@@ -36,4 +36,14 @@ public class AppKeyRecordUtilsTests {
         assertEquals(10, appKeyRecord.getTtl());
     }
     
+    @Test
+    public void convertDTOtoDomainGivenDTOWithoutTtlShouldReturnAppKeyRecordWithDefaultTtl() {
+        AppKeyRecordDTO dto = new AppKeyRecordDTO("key1", "value1");
+        AppKeyRecord appKeyRecord = AppKeyRecordUtils.convertDTOtoAppKeyRecord(dto, "app1", 20);
+
+        assertEquals("app1", appKeyRecord.getApp());
+        assertEquals("key1", appKeyRecord.getKey());
+        assertEquals("value1", appKeyRecord.getValue());
+        assertEquals(20, appKeyRecord.getTtl());
+    }
 }

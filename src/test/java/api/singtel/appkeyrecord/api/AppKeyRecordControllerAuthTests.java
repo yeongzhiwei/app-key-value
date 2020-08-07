@@ -34,7 +34,7 @@ public class AppKeyRecordControllerAuthTests {
 
     @Test
     public void getValidCredentialsShouldReturnOk() throws Exception {
-        when(repo.findByAppAndKey("app1", "key1")).thenReturn(Optional.ofNullable(new AppKeyRecord("app1", "key1", "value1")));
+        when(repo.findByAppAndKey("app1", "key1")).thenReturn(Optional.ofNullable(new AppKeyRecord("app1", "key1", "value1", 10)));
         
         this.mockMvc.perform(get("/apps/app1/keys/key1")
                 .with(httpBasic("user", "pass")))
@@ -44,7 +44,7 @@ public class AppKeyRecordControllerAuthTests {
 
     @Test
     public void getInvalidUserShouldReturnUnauthorized() throws Exception {
-        when(repo.findByAppAndKey("app1", "key1")).thenReturn(Optional.ofNullable(new AppKeyRecord("app1", "key1", "value1")));
+        when(repo.findByAppAndKey("app1", "key1")).thenReturn(Optional.ofNullable(new AppKeyRecord("app1", "key1", "value1", 10)));
         
         this.mockMvc.perform(get("/apps/app1/keys/key1")
                 .with(httpBasic("wrongUser", "pass")))
@@ -53,7 +53,7 @@ public class AppKeyRecordControllerAuthTests {
 
     @Test
     public void getInvalidPassShouldReturnUnauthorized() throws Exception {
-        when(repo.findByAppAndKey("app1", "key1")).thenReturn(Optional.ofNullable(new AppKeyRecord("app1", "key1", "value1")));
+        when(repo.findByAppAndKey("app1", "key1")).thenReturn(Optional.ofNullable(new AppKeyRecord("app1", "key1", "value1", 10)));
         
         this.mockMvc.perform(get("/apps/app1/keys/key1")
                 .with(httpBasic("user", "wrongPass")))
@@ -62,7 +62,7 @@ public class AppKeyRecordControllerAuthTests {
 
     @Test
     public void postValidCredentialsShouldReturnCreated() throws Exception {
-        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1");
+        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1", 10);
 
         when(repo.save(any(AppKeyRecord.class))).thenReturn(record);
 
@@ -79,7 +79,7 @@ public class AppKeyRecordControllerAuthTests {
 
     @Test
     public void postInvalidCredentialsShouldReturnUnauthorized() throws Exception {
-        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1");
+        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1", 10);
 
         when(repo.save(any(AppKeyRecord.class))).thenReturn(record);
 

@@ -35,7 +35,7 @@ public class AppKeyRecordControllerTests {
 
     @Test
     public void getValidRecordShouldReturnOk() throws Exception {
-        when(service.get("app1", "key1")).thenReturn(new AppKeyRecord("app1", "key1", "value1"));
+        when(service.get("app1", "key1")).thenReturn(new AppKeyRecord("app1", "key1", "value1", 10));
         
         this.mockMvc.perform(get("/apps/app1/keys/key1"))
             .andExpect(status().isOk())
@@ -53,7 +53,7 @@ public class AppKeyRecordControllerTests {
 
     @Test
     public void postValidRecordShouldReturnCreated() throws Exception {
-        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1");
+        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1", 10);
         when(service.create(eq("app1"), any(AppKeyRecordDTO.class))).thenReturn(record);
 
         Gson gson = new Gson();

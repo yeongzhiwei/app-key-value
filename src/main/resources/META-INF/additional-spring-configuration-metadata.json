@@ -1,0 +1,9 @@
+{
+    "properties": [
+        {
+            "name": "api.singtel.appkeyrecord.default-ttl",
+            "type": "int",
+            "description": "Sets the default TTL in seconds for new record."
+        }
+    ]
+}

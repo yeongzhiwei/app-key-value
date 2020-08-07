@@ -12,13 +12,13 @@ public final class AppKeyRecordUtils {
         return expireAt.isBefore(LocalDateTime.now());
     }
 
-    public static AppKeyRecord convertDTOtoAppKeyRecord(AppKeyRecordDTO dto, String app) {
-        return new AppKeyRecord(
-            app,
-            dto.getKey(),
-            dto.getValue(),
-            dto.getTtl()
-        );
+    public static AppKeyRecord convertDTOtoAppKeyRecord(AppKeyRecordDTO dto, String app, int defaultTtl) {
+        Integer ttl = dto.getTtl();
+        if (ttl == null) {
+            ttl = defaultTtl;
+        }
+
+        return new AppKeyRecord(app, dto.getKey(), dto.getValue(), ttl);
     }
-    
+
 }

@@ -8,7 +8,7 @@ public class AppKeyRecordTests {
 
     @Test
     public void createRecordShouldReturnObject() {
-        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1");
+        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1", 10);
 
         assertEquals("app1", record.getApp());
         assertEquals("key1", record.getKey());
@@ -16,7 +16,7 @@ public class AppKeyRecordTests {
     }
 
     public void setPropertiesShouldUpdateProperties() {
-        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1");
+        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1", 10);
 
         record.setApp("app2");
         assertEquals("app2", record.getApp());

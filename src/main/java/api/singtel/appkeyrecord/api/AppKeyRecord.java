@@ -6,14 +6,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @RedisHash("AppKeyRecord")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class AppKeyRecord {
     
     @Id
@@ -27,7 +25,7 @@ public class AppKeyRecord {
 
     private String value;
 
-    private int ttl = 5;
+    private int ttl;
     
     private LocalDateTime recordedAt = LocalDateTime.now();
 
@@ -37,14 +35,10 @@ public class AppKeyRecord {
     }
 
     public AppKeyRecord(String app, String key, String value, int ttl) {
-        this(app, key, value);
-        this.ttl = ttl;
-    }
-
-    public AppKeyRecord(String app, String key, String value) {
         this.app = app;
         this.key = key;
         this.value = value;
+        this.ttl = ttl;
     }
 
 }

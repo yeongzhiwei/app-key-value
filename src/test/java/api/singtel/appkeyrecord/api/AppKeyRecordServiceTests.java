@@ -21,11 +21,15 @@ public class AppKeyRecordServiceTests {
     @Mock
     private AppKeyRecordRepository repo;
 
+    @Mock
+    private AppKeyRecordProps props;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        service = new AppKeyRecordService(repo);
+        service = new AppKeyRecordService(repo, props);
 
+        when(props.getDefaultTtl()).thenReturn(10);
         when(repo.findByAppAndKey("app1", "keyExists")).thenReturn(Optional.of(new AppKeyRecord("app1", "keyExists", "value1", 100)));
         when(repo.findByAppAndKey("app1", "keyDoesNotExist")).thenThrow(new AppKeyRecordNotFoundException("app1", "keyDoesNotExist"));
         when(repo.findByAppAndKey("app1", "keyExpired")).thenReturn(Optional.of(new AppKeyRecord("app1", "keyExpired", "value1", 10, LocalDateTime.now().minusSeconds(20))));
@@ -67,6 +71,6 @@ public class AppKeyRecordServiceTests {
 
     @Test
     public void deleteGivenAnyRecordShouldReturnNothing() throws Exception {
-        service.delete(new AppKeyRecord("app1", "keyExists", "value1"));
+        service.delete(new AppKeyRecord("app1", "keyExists", "value1", 10));
     }
 }
