@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord;
+package api.singtel.appkeyrecord.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

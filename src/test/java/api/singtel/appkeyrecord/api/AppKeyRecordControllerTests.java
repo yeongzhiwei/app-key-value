@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord;
+package api.singtel.appkeyrecord.api;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;

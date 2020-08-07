@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord;
+package api.singtel.appkeyrecord.api;
 
 public class AppKeyRecordNotFoundException extends RuntimeException {
     
