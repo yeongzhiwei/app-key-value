@@ -1,5 +1,7 @@
 package api.singtel.appkeyrecord.api;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +13,10 @@ public class AppKeyRecordService {
     public AppKeyRecordService(AppKeyRecordRepository repo, AppKeyRecordProps props) {
         this.repo = repo;
         this.defaultTtl = props.getDefaultTtl();
+    }
+
+    public List<AppKeyRecord> getAll(String app) {
+        return repo.findAllByApp(app);
     }
 
     public AppKeyRecord get(String app, String key) {

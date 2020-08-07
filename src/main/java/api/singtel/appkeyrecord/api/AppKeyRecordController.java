@@ -1,5 +1,7 @@
 package api.singtel.appkeyrecord.api;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
@@ -24,14 +26,19 @@ public class AppKeyRecordController {
         this.service = service;
     }
 
+    @GetMapping(produces = "application/json")
+    public List<AppKeyRecord> getAll(@PathVariable("app") String app) {
+        return service.getAll(app);
+    }
+
     @GetMapping(path = "/{key}", produces = "application/json")
-    public AppKeyRecord getAppKey(@PathVariable("app") String app, @PathVariable("key") String key) {
+    public AppKeyRecord getOne(@PathVariable("app") String app, @PathVariable("key") String key) {
         return service.get(app, key);
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public AppKeyRecord createAppKey(
+    public AppKeyRecord createOne(
             @PathVariable("app") @Pattern(regexp = "^[\\p{Alnum}]{1,256}$", message = "app in the URI must be alphanumeric and up to 256 characters") String app, 
             @RequestBody @Valid AppKeyRecordDTO appKeyRecordDTO) {
         return service.create(app, appKeyRecordDTO);

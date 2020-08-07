@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -32,6 +33,15 @@ public class AppKeyRecordControllerTests {
     
     @Autowired
     private MockMvc mockMvc;
+
+    @Test
+    public void getAllValidRecordShouldReturnOk() throws Exception {
+        when(service.getAll("app1")).thenReturn(Arrays.asList(new AppKeyRecord("app1", "key1", "value1", 10)));
+        
+        this.mockMvc.perform(get("/apps/app1/keys"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.length()").value(1));
+    }
 
     @Test
     public void getValidRecordShouldReturnOk() throws Exception {
