@@ -1,5 +1,6 @@
 package api.singtel.appkeyrecord.api.model;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
@@ -10,9 +11,11 @@ public class AppKeyRecordTests {
     public void createRecordShouldReturnObject() {
         AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1", 10);
 
-        assertEquals("app1", record.getApp());
-        assertEquals("key1", record.getKey());
-        assertEquals("value1", record.getValue());
+        assertAll("record", 
+            () -> assertEquals("app1", record.getApp()),
+            () -> assertEquals("key1", record.getKey()),
+            () -> assertEquals("value1", record.getValue())
+        );
     }
 
     public void setPropertiesShouldUpdateProperties() {

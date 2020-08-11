@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,11 +30,8 @@ public class AppKeyRecordServiceTests {
 
     private AppKeyRecordService service;
 
-    @Mock
-    private AppKeyRecordRepository repo;
-
-    @Mock
-    private AppKeyRecordProps props;
+    @Mock private AppKeyRecordRepository repo;
+    @Mock private AppKeyRecordProps props;
 
     @BeforeEach
     public void setUp() {
@@ -68,9 +66,11 @@ public class AppKeyRecordServiceTests {
     @Test
     public void getGivenValidAppAndKeyShouldReturnRecord() throws Exception {
         AppKeyRecord actualRecord = service.get("app1", "keyExists");
-        assertEquals("app1", actualRecord.getApp());
-        assertEquals("keyExists", actualRecord.getKey());
-        assertEquals("value1", actualRecord.getValue());
+        assertAll("record",
+            () -> assertEquals("app1", actualRecord.getApp()),
+            () -> assertEquals("keyExists", actualRecord.getKey()),
+            () -> assertEquals("value1", actualRecord.getValue())
+        );
     }
 
     @Test
@@ -91,10 +91,12 @@ public class AppKeyRecordServiceTests {
     public void createGivenValidAppAndDtoShouldReturnRecord() throws Exception {
         AppKeyRecordDTO dto = new AppKeyRecordDTO("key1", "value1", 100);
         AppKeyRecord actualRecord = service.create("app1", dto);
-        assertEquals("app1", actualRecord.getApp());
-        assertEquals("key1", actualRecord.getKey());
-        assertEquals("value1", actualRecord.getValue());
-        assertEquals(100, actualRecord.getTtl());
+        assertAll("record",
+            () -> assertEquals("app1", actualRecord.getApp()),
+            () -> assertEquals("key1", actualRecord.getKey()),
+            () -> assertEquals("value1", actualRecord.getValue()),
+            () -> assertEquals(100, actualRecord.getTtl())
+        );
     }
 
     @Test

@@ -32,12 +32,10 @@ import api.singtel.appkeyrecord.api.service.AppKeyRecordService;
 @AutoConfigureMockMvc
 public class AppKeyRecordControllerTests {
     
-    @MockBean
-    AppKeyRecordService service;
+    @MockBean AppKeyRecordService service;
+    @Autowired private MockMvc mockMvc;
+    Gson gson = new Gson();
     
-    @Autowired
-    private MockMvc mockMvc;
-
     @Test
     public void getAllValidRecordShouldReturnOk() throws Exception {
         when(service.getAll("app1")).thenReturn(Arrays.asList(new AppKeyRecord("app1", "key1", "value1", 10)));
@@ -67,87 +65,65 @@ public class AppKeyRecordControllerTests {
 
     @Test
     public void postValidRecordShouldReturnCreated() throws Exception {
-        AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1", 10);
-        when(service.create(eq("app1"), any(AppKeyRecordDTO.class))).thenReturn(record);
-
-        Gson gson = new Gson();
-        String jsonRecord = gson.toJson(Map.of("key", "key1", "value", "value1"));
+        when(service.create(eq("app1"), any(AppKeyRecordDTO.class))).thenReturn(new AppKeyRecord("app1", "key1", "value1", 10));
 
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRecord))
+                .content(gson.toJson(Map.of("key", "key1", "value", "value1"))))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.value").value("value1"));
     }
 
     @Test
     public void postInvalidAppShouldReturnBadRequest() throws Exception {
-        Gson gson = new Gson();
-        String jsonRecord = gson.toJson(Map.of("key", "key1", "value", "value1"));
-
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRecord))
+                .content(gson.toJson(Map.of("key", "key1", "value", "value1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("app")));
     }
     
     @Test
     public void postInvalidKeyShouldReturnBadRequest() throws Exception {
-        Gson gson = new Gson();
-        String jsonRecord = gson.toJson(Map.of("key", "key1@", "value", "value1"));
-
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRecord))
+                .content(gson.toJson(Map.of("key", "key1@", "value", "value1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("key")));
     }
     
     @Test
     public void postBlankKeyShouldReturnBadRequest() throws Exception {
-        Gson gson = new Gson();
-        String jsonRecord = gson.toJson(Map.of("key", "", "value", "value1"));
-
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRecord))
+                .content(gson.toJson(Map.of("key", "", "value", "value1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("key")));
     }
     
     @Test
     public void postMissingKeyShouldReturnBadRequest() throws Exception {
-        Gson gson = new Gson();
-        String jsonRecord = gson.toJson(Map.of("value", "value1"));
-
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRecord))
+                .content(gson.toJson(Map.of("value", "value1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("key")));
     }
     
     @Test
     public void postBlankValueShouldReturnBadRequest() throws Exception {
-        Gson gson = new Gson();
-        String jsonRecord = gson.toJson(Map.of("key", "key1", "value", ""));
-
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRecord))
+                .content(gson.toJson(Map.of("key", "key1", "value", ""))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("value")));
     }
 
     @Test
     public void postMissingValueShouldReturnBadRequest() throws Exception {
-        Gson gson = new Gson();
-        String jsonRecord = gson.toJson(Map.of("key", "key1"));
-
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonRecord))
+                .content(gson.toJson(Map.of("key", "key1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("value")));
     }

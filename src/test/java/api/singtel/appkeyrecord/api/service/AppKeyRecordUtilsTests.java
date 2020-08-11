@@ -1,5 +1,6 @@
 package api.singtel.appkeyrecord.api.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,10 +34,12 @@ public class AppKeyRecordUtilsTests {
         AppKeyRecordDTO dto = new AppKeyRecordDTO("key1", "value1", 10);
         AppKeyRecord appKeyRecord = AppKeyRecordUtils.convertDTOtoAppKeyRecord(dto, "app1", 10);
 
-        assertEquals("app1", appKeyRecord.getApp());
-        assertEquals("key1", appKeyRecord.getKey());
-        assertEquals("value1", appKeyRecord.getValue());
-        assertEquals(10, appKeyRecord.getTtl());
+        assertAll("record",
+            () -> assertEquals("app1", appKeyRecord.getApp()),
+            () -> assertEquals("key1", appKeyRecord.getKey()),
+            () -> assertEquals("value1", appKeyRecord.getValue()),
+            () -> assertEquals(10, appKeyRecord.getTtl())
+        );
     }
     
     @Test
@@ -44,9 +47,11 @@ public class AppKeyRecordUtilsTests {
         AppKeyRecordDTO dto = new AppKeyRecordDTO("key1", "value1");
         AppKeyRecord appKeyRecord = AppKeyRecordUtils.convertDTOtoAppKeyRecord(dto, "app1", 20);
 
-        assertEquals("app1", appKeyRecord.getApp());
-        assertEquals("key1", appKeyRecord.getKey());
-        assertEquals("value1", appKeyRecord.getValue());
-        assertEquals(20, appKeyRecord.getTtl());
+        assertAll("record",
+            () -> assertEquals("app1", appKeyRecord.getApp()),
+            () -> assertEquals("key1", appKeyRecord.getKey()),
+            () -> assertEquals("value1", appKeyRecord.getValue()),
+            () -> assertEquals(20, appKeyRecord.getTtl())
+        );
     }
 }
