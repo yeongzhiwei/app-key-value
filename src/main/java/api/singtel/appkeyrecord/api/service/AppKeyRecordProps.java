@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.service;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

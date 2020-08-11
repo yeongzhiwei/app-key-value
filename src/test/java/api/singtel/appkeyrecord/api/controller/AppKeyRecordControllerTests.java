@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.controller;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -22,6 +22,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import api.singtel.appkeyrecord.api.model.AppKeyRecord;
+import api.singtel.appkeyrecord.api.model.AppKeyRecordNotFoundException;
+import api.singtel.appkeyrecord.api.service.AppKeyRecordService;
 
 @SpringBootTest
 @ActiveProfiles("test")

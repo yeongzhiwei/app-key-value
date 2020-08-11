@@ -1,9 +1,11 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.repo;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
+
+import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 
 public interface AppKeyRecordRepository extends CrudRepository<AppKeyRecord, String> {
     

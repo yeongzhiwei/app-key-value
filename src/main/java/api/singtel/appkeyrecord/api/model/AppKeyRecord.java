@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.model;
 
 import java.time.LocalDateTime;
 

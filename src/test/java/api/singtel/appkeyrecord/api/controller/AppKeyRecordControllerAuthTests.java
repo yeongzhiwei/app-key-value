@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.controller;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 
@@ -20,9 +20,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import api.singtel.appkeyrecord.api.model.AppKeyRecord;
+import api.singtel.appkeyrecord.api.repo.AppKeyRecordRepository;
+
 @SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class AppKeyRecordControllerAuthTests {
 

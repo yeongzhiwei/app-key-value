@@ -1,6 +1,9 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.service;
 
 import java.time.LocalDateTime;
+
+import api.singtel.appkeyrecord.api.controller.AppKeyRecordDTO;
+import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 
 public final class AppKeyRecordUtils {
 

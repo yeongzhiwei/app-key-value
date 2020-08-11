@@ -1,8 +1,13 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+
+import api.singtel.appkeyrecord.api.controller.AppKeyRecordDTO;
+import api.singtel.appkeyrecord.api.model.AppKeyRecord;
+import api.singtel.appkeyrecord.api.model.AppKeyRecordNotFoundException;
+import api.singtel.appkeyrecord.api.repo.AppKeyRecordRepository;
 
 @Service
 public class AppKeyRecordService {

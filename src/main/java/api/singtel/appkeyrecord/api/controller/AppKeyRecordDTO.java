@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.controller;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

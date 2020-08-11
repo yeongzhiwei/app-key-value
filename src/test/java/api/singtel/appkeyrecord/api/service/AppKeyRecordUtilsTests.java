@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -8,6 +8,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.Test;
+
+import api.singtel.appkeyrecord.api.controller.AppKeyRecordDTO;
+import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 
 public class AppKeyRecordUtilsTests {
 

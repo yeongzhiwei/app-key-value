@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.controller;
 
 import java.util.List;
 
@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import api.singtel.appkeyrecord.api.model.AppKeyRecord;
+import api.singtel.appkeyrecord.api.service.AppKeyRecordService;
 
 @RestController
 @RequestMapping("/apps/{app}/keys")

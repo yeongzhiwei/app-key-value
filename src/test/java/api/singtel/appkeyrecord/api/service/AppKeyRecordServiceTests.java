@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord.api;
+package api.singtel.appkeyrecord.api.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -19,6 +19,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import api.singtel.appkeyrecord.api.controller.AppKeyRecordDTO;
+import api.singtel.appkeyrecord.api.model.AppKeyRecord;
+import api.singtel.appkeyrecord.api.model.AppKeyRecordNotFoundException;
+import api.singtel.appkeyrecord.api.repo.AppKeyRecordRepository;
 
 public class AppKeyRecordServiceTests {
 
