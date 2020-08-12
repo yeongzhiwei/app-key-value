@@ -45,7 +45,7 @@ public class AppKeyRecordServiceTests {
         when(repo.findAllByApp("app1")).thenReturn(Arrays.asList(validRecord, expiredRecord));
         when(repo.findByAppAndKey("app1", "keyExists")).thenReturn(Optional.of(validRecord));
         when(repo.findByAppAndKey("app1", "keyDoesNotExist")).thenThrow(new AppKeyRecordNotFoundException("app1", "keyDoesNotExist"));
-        when(repo.findByAppAndKey("app1", "keyExpired")).thenReturn(Optional.of(expiredRecord));
+        when(repo.findByAppAndKey("app1", "keyExpired")).thenReturn(Optional.empty());
         doNothing().when(repo).delete(any(AppKeyRecord.class));
         when(repo.save(any(AppKeyRecord.class))).thenAnswer(i -> i.getArguments()[0]);
     }

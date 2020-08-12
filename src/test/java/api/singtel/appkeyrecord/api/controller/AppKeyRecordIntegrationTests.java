@@ -1,7 +1,6 @@
 package api.singtel.appkeyrecord.api.controller;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
@@ -17,6 +16,7 @@ import java.util.Map;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import api.singtel.appkeyrecord.api.BaseRedisIntegrationTests;
 import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 import api.singtel.appkeyrecord.api.repo.AppKeyRecordRepository;
-import api.singtel.appkeyrecord.api.service.AppKeyRecordService;
 
 @AutoConfigureMockMvc
 @WithMockUser(username = "testuser")
@@ -36,14 +35,18 @@ public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
     
     @Autowired private MockMvc mockMvc;
     @Autowired private AppKeyRecordRepository repository;
-    @Autowired private AppKeyRecordService service;
     @Autowired private ObjectMapper objectMapper;
 
     @BeforeEach
     public void seedData() {
-        service.create("app1", new AppKeyRecordDTO("key1", "value1", 1));
-        service.create("app1", new AppKeyRecordDTO("key2", "value2"));
-        service.create("app2", new AppKeyRecordDTO("key1", "value3", 10));
+        repository.save(new AppKeyRecord("app1", "key1", "value1", 1));
+        repository.save(new AppKeyRecord("app1", "key2", "value2", 10));
+        repository.save(new AppKeyRecord("app2", "key1", "value3", 10));
+    }
+
+    @AfterEach
+    public void removeData() {
+        repository.deleteAll();
     }
     
     @Test
@@ -56,12 +59,13 @@ public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
 
         List<AppKeyRecord> actual = objectMapper.readValue(json, new TypeReference<List<AppKeyRecord>>() { });
      
-        assertThat(actual, hasItem(allOf(hasProperty("app", equalTo("app1")))));
+        assertTrue(actual.size() > 0);
+        assertThat(actual, hasItem(hasProperty("app", equalTo("app1"))));
     }
 
     @Test
     public void getAllNoRecordShouldReturnOkWithEmptyList() throws Exception {
-        this.mockMvc.perform(get("/apps/nosuchapp/keys"))
+        this.mockMvc.perform(get("/apps/noSuchApp/keys"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(0));
     }
@@ -78,7 +82,7 @@ public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
     
     @Test
     public void getOneInvalidRecordShouldReturnNotFound() throws Exception {
-        this.mockMvc.perform(get("/apps/app1/keys/nosuchkey"))
+        this.mockMvc.perform(get("/apps/app1/keys/noSuchKey"))
             .andExpect(status().isNotFound());
     }
 

@@ -25,12 +25,7 @@ public class AppKeyRecordService {
     }
 
     public AppKeyRecord get(String app, String key) {
-        AppKeyRecord record = repo.findByAppAndKey(app, key).orElseThrow(() -> new AppKeyRecordNotFoundException(app, key));
-        if (AppKeyRecordUtils.isExpired(record)) {
-            delete(record);
-            throw new AppKeyRecordNotFoundException(app, key); 
-        }
-        return record;
+        return repo.findByAppAndKey(app, key).orElseThrow(() -> new AppKeyRecordNotFoundException(app, key));
     }
 
     public AppKeyRecord create(String app, AppKeyRecordDTO dto) {

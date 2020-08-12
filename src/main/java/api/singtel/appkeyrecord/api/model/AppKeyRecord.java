@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.data.redis.core.index.Indexed;
 
 import lombok.Data;
@@ -25,6 +26,7 @@ public class AppKeyRecord {
 
     private String value;
 
+    @TimeToLive
     private int ttl;
     
     private LocalDateTime recordedAt = LocalDateTime.now();
