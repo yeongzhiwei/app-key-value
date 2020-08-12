@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.Map;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     
     @MockBean AppKeyRecordService service;
     @Autowired private MockMvc mockMvc;
-    private Gson gson = new Gson();
+    @Autowired private ObjectMapper objectMapper;
 
     @Test
     public void getAllValidRecordShouldReturnOk() throws Exception {
@@ -66,7 +66,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
 
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(Map.of("key", "key1", "value", "value1"))))
+                .content(objectMapper.writeValueAsString(Map.of("key", "key1", "value", "value1"))))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.value").value("value1"));
     }
@@ -75,7 +75,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     public void postInvalidAppShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(Map.of("key", "key1", "value", "value1"))))
+                .content(objectMapper.writeValueAsString(Map.of("key", "key1", "value", "value1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("app")));
     }
@@ -84,7 +84,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     public void postInvalidKeyShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(Map.of("key", "key1@", "value", "value1"))))
+                .content(objectMapper.writeValueAsString(Map.of("key", "key1@", "value", "value1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("key")));
     }
@@ -93,7 +93,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     public void postBlankKeyShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(Map.of("key", "", "value", "value1"))))
+                .content(objectMapper.writeValueAsString(Map.of("key", "", "value", "value1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("key")));
     }
@@ -102,7 +102,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     public void postMissingKeyShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(Map.of("value", "value1"))))
+                .content(objectMapper.writeValueAsString(Map.of("value", "value1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("key")));
     }
@@ -111,7 +111,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     public void postBlankValueShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(Map.of("key", "key1", "value", ""))))
+                .content(objectMapper.writeValueAsString(Map.of("key", "key1", "value", ""))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("value")));
     }
@@ -120,7 +120,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     public void postMissingValueShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(gson.toJson(Map.of("key", "key1"))))
+                .content(objectMapper.writeValueAsString(Map.of("key", "key1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("value")));
     }
