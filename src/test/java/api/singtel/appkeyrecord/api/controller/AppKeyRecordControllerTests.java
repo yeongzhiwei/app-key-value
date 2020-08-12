@@ -17,25 +17,22 @@ import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import api.singtel.appkeyrecord.api.BaseIntegrationTests;
 import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 import api.singtel.appkeyrecord.api.model.AppKeyRecordNotFoundException;
 import api.singtel.appkeyrecord.api.service.AppKeyRecordService;
 
-@SpringBootTest
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class AppKeyRecordControllerTests {
+public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     
     @MockBean AppKeyRecordService service;
     @Autowired private MockMvc mockMvc;
-    Gson gson = new Gson();
-    
+    private Gson gson = new Gson();
+
     @Test
     public void getAllValidRecordShouldReturnOk() throws Exception {
         when(service.getAll("app1")).thenReturn(Arrays.asList(new AppKeyRecord("app1", "key1", "value1", 10)));

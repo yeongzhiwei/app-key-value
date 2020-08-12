@@ -1,10 +1,9 @@
 package api.singtel.appkeyrecord.api.controller;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -18,21 +17,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import api.singtel.appkeyrecord.api.BaseIntegrationTests;
 import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 import api.singtel.appkeyrecord.api.service.AppKeyRecordService;
 
-@SpringBootTest
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class AppKeyRecordControllerAuthTests {
+public class AppKeyRecordControllerAuthTests extends BaseIntegrationTests {
 
-    @MockBean AppKeyRecordService service;    
+    @MockBean AppKeyRecordService service;
     @Autowired private MockMvc mockMvc;
     Gson gson = new Gson();
 
@@ -46,7 +42,7 @@ public class AppKeyRecordControllerAuthTests {
     @Test
     public void getValidCredentialsShouldReturnOk() throws Exception {
         this.mockMvc.perform(get("/apps/app1/keys/key1")
-                .with(httpBasic("user", "pass")))
+                .with(httpBasic("testuser", "testpass")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.value").value("value1"));
     }
@@ -54,14 +50,14 @@ public class AppKeyRecordControllerAuthTests {
     @Test
     public void getInvalidUserShouldReturnUnauthorized() throws Exception {
         this.mockMvc.perform(get("/apps/app1/keys/key1")
-                .with(httpBasic("wrongUser", "pass")))
+                .with(httpBasic("wronguser", "testpass")))
             .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void getInvalidPassShouldReturnUnauthorized() throws Exception {
         this.mockMvc.perform(get("/apps/app1/keys/key1")
-                .with(httpBasic("user", "wrongPass")))
+                .with(httpBasic("testuser", "wrongpass")))
             .andExpect(status().isUnauthorized());
     }
 
@@ -70,7 +66,7 @@ public class AppKeyRecordControllerAuthTests {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(Map.of("key", "key1", "value", "value1")))
-                .with(httpBasic("user", "pass")))
+                .with(httpBasic("testuser", "testpass")))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.value").value("value1"));
     }
@@ -80,7 +76,7 @@ public class AppKeyRecordControllerAuthTests {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(gson.toJson(Map.of("key", "key1", "value", "value1")))
-                .with(httpBasic("wrongUser", "wrongPass")))
+                .with(httpBasic("wronguser", "wrongpass")))
             .andExpect(status().isUnauthorized());
     }
     
