@@ -5,15 +5,15 @@ import java.io.IOException;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import redis.embedded.RedisServer;
 
-@Profile("dev")
 @Component
 public class EmbeddedRedisConfiguration {
 
+    @Value("${api.singtel.embedded-redis-server.enabled:false}") private boolean enabled;
     private int redisPort;
     private RedisServer redisServer;
 
@@ -23,13 +23,17 @@ public class EmbeddedRedisConfiguration {
 
     @PostConstruct
     public void startRedis() throws IOException {
-        redisServer = new RedisServer(redisPort);
-        redisServer.start();
+        if (enabled) {
+            redisServer = new RedisServer(redisPort);
+            redisServer.start();
+        }
     }
 
     @PreDestroy
     public void stopRedis() {
-        redisServer.stop();
+        if (redisServer != null) {
+            redisServer.stop();
+        }
     }
 
 }

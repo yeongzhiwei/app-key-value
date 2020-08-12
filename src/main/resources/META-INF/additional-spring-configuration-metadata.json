@@ -1,6 +1,12 @@
 {
     "properties": [
         {
+            "name": "api.singtel.embedded-redis-server.enabled",
+            "type": "boolean",
+            "description": "Starts the embedded Redis server if set to true.",
+            "defaultValue": false
+        },
+        {
             "name": "api.singtel.appkeyrecord.default-ttl",
             "type": "int",
             "description": "Sets the default TTL in seconds for new record."

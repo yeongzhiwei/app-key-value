@@ -1,15 +1,20 @@
 package api.singtel.appkeyrecord.redis;
 
+import java.time.Duration;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.ClientOptions.DisconnectedBehavior;
+
 @Configuration
 @EnableRedisRepositories
-@DependsOn("embeddedRedisConfiguration")
 public class RedisConfiguration {
     
     private int redisPort;
@@ -22,7 +27,19 @@ public class RedisConfiguration {
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(redisHost, redisPort);
+        RedisStandaloneConfiguration serverConfig = new RedisStandaloneConfiguration(redisHost, redisPort);
+
+        ClientOptions options = ClientOptions.builder()
+            .disconnectedBehavior(DisconnectedBehavior.REJECT_COMMANDS)
+            .autoReconnect(false)
+            .build();
+
+        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+            .commandTimeout(Duration.ofSeconds(0))
+            .clientOptions(options)
+            .build();
+
+        return new LettuceConnectionFactory(serverConfig, clientConfig);
     }
 
     @Bean
