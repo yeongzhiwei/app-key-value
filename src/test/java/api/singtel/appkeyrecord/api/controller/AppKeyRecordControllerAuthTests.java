@@ -48,6 +48,12 @@ public class AppKeyRecordControllerAuthTests extends BaseIntegrationTests {
     }
 
     @Test
+    public void getNoCredentialsShouldReturnUnauthorized() throws Exception {
+        this.mockMvc.perform(get("/apps/app1/keys/key1"))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void getInvalidUserShouldReturnUnauthorized() throws Exception {
         this.mockMvc.perform(get("/apps/app1/keys/key1")
                 .with(httpBasic("wronguser", "testpass")))
@@ -69,6 +75,14 @@ public class AppKeyRecordControllerAuthTests extends BaseIntegrationTests {
                 .with(httpBasic("testuser", "testpass")))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.value").value("value1"));
+    }
+
+    @Test
+    public void postNoCredentialsShouldReturnUnauthorized() throws Exception {
+        this.mockMvc.perform(post("/apps/app1/keys")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Map.of("key", "key1", "value", "value1"))))
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
