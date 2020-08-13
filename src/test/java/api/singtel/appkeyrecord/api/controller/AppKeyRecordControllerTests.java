@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -93,7 +94,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     
     @Test
     public void postBlankKeyShouldReturnBadRequest() throws Exception {
-        this.mockMvc.perform(post("/apps/app1@/keys")
+        this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "", "value", "value1"))))
             .andExpect(status().isBadRequest())
@@ -102,7 +103,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     
     @Test
     public void postMissingKeyShouldReturnBadRequest() throws Exception {
-        this.mockMvc.perform(post("/apps/app1@/keys")
+        this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("value", "value1"))))
             .andExpect(status().isBadRequest())
@@ -111,7 +112,7 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
     
     @Test
     public void postBlankValueShouldReturnBadRequest() throws Exception {
-        this.mockMvc.perform(post("/apps/app1@/keys")
+        this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key1", "value", ""))))
             .andExpect(status().isBadRequest())
@@ -120,11 +121,35 @@ public class AppKeyRecordControllerTests extends BaseIntegrationTests {
 
     @Test
     public void postMissingValueShouldReturnBadRequest() throws Exception {
-        this.mockMvc.perform(post("/apps/app1@/keys")
+        this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key1"))))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.message").value(containsString("value")));
+    }
+
+    @Test
+    public void deleteValidAppShouldReturnNoContent() throws Exception {
+        this.mockMvc.perform(delete("/apps/app1/keys"))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteInvalidAppShouldReturnBadRequest() throws Exception {
+        this.mockMvc.perform(delete("/apps/app1@/keys"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteValidAppAndKeyShouldReturnNoContent() throws Exception {
+        this.mockMvc.perform(delete("/apps/app1/keys/key1"))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteInvalidKeyShouldReturBadRequest() throws Exception {
+        this.mockMvc.perform(delete("/apps/app1/keys/key1@"))
+            .andExpect(status().isBadRequest());
     }
 
 }

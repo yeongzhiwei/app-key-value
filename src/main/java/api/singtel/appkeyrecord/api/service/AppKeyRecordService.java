@@ -29,14 +29,18 @@ public class AppKeyRecordService {
     }
 
     public AppKeyRecord create(String app, AppKeyRecordDTO dto) {
-        repo.findByAppAndKey(app, dto.getKey()).ifPresent(repo::delete);
+        delete(app, dto.getKey());
 
         AppKeyRecord record = AppKeyRecordUtils.convertDTOtoAppKeyRecord(dto, app, defaultTtl);
         return repo.save(record);
     }
 
-    public void delete(AppKeyRecord record) {
-        repo.delete(record);
+    public void delete(String app) {
+        repo.deleteAll(repo.findAllByApp(app));
+    }
+
+    public void delete(String app, String key) {
+        repo.deleteAll(repo.findAllByAppAndKey(app, key));
     }
 
 }

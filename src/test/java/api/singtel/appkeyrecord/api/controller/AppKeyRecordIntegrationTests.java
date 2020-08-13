@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -112,6 +113,34 @@ public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
             .andExpect(jsonPath("$.ttl").value(888));
 
         assertTrue(repository.findByAppAndKey("app1", "key4").isPresent());
+    }
+    
+    @Test
+    public void deleteAllValidAppShouldReturnOkWithNoContent() throws Exception {
+        this.mockMvc.perform(delete("/apps/app1/keys"))
+            .andExpect(status().isNoContent());
+
+        assertTrue(repository.findAllByApp("app1").size() == 0);
+    }
+
+    @Test
+    public void deleteAllNoRecordShouldReturnOkWithNoContent() throws Exception {
+        this.mockMvc.perform(delete("/apps/noSuchApp/keys"))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteOneValidAppAndKeyShouldReturnOkWithNoContent() throws Exception {
+        this.mockMvc.perform(delete("/apps/app1/keys/key1"))
+            .andExpect(status().isNoContent());
+
+        assertTrue(repository.findAllByAppAndKey("app1", "key1").size() == 0);
+    }
+
+    @Test
+    public void deleteOneNoRecordShouldReturnOkWithNoContent() throws Exception {
+        this.mockMvc.perform(delete("/apps/app1/keys/noSuchKey"))
+            .andExpect(status().isNoContent());
     }
     
 }

@@ -16,12 +16,12 @@ import io.lettuce.core.ClientOptions.DisconnectedBehavior;
 
 @Configuration
 @EnableRedisRepositories(enableKeyspaceEvents = EnableKeyspaceEvents.ON_DEMAND)
-public class RedisConfiguration {
+public class TestRedisConfiguration {
     
     private int redisPort;
     private String redisHost;
     
-    public RedisConfiguration(RedisProperties redisProperties) {
+    public TestRedisConfiguration(RedisProperties redisProperties) {
         this.redisPort = redisProperties.getPort();
         this.redisHost = redisProperties.getHost();
     }

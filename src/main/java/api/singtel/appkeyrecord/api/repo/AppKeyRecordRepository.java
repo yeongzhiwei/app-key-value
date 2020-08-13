@@ -9,10 +9,11 @@ import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 
 public interface AppKeyRecordRepository extends CrudRepository<AppKeyRecord, String> {
     
-    public void deleteAllByAppAndKey(String app, String key);
+    public List<AppKeyRecord> findAllByApp(String app);
+
+    public List<AppKeyRecord> findAllByAppAndKey(String app, String key);
 
     public Optional<AppKeyRecord> findByAppAndKey(String app, String key);
 
-    public List<AppKeyRecord> findAllByApp(String app);
 
 }

@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -46,7 +45,6 @@ public class AppKeyRecordServiceTests {
         when(repo.findByAppAndKey("app1", "keyExists")).thenReturn(Optional.of(validRecord));
         when(repo.findByAppAndKey("app1", "keyDoesNotExist")).thenThrow(new AppKeyRecordNotFoundException("app1", "keyDoesNotExist"));
         when(repo.findByAppAndKey("app1", "keyExpired")).thenReturn(Optional.empty());
-        doNothing().when(repo).delete(any(AppKeyRecord.class));
         when(repo.save(any(AppKeyRecord.class))).thenAnswer(i -> i.getArguments()[0]);
     }
 
@@ -100,7 +98,13 @@ public class AppKeyRecordServiceTests {
     }
 
     @Test
-    public void deleteGivenAnyRecordShouldReturnNothing() throws Exception {
-        service.delete(new AppKeyRecord("app1", "keyExists", "value1", 10));
+    public void deleteGivenValidAppShouldReturnNothing() throws Exception {
+        service.delete("app1");
     }
+
+    @Test
+    public void deleteAllGivenValidAppAndKeyShouldReturnNothing() throws Exception {
+        service.delete("app1", "keyExists");
+    }
+    
 }
