@@ -17,10 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 import api.singtel.appkeyrecord.api.service.AppKeyRecordService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/apps/{app}/keys")
 @Validated
+@Api(description = "Read, create, and delete app:key-value records")
 public class AppKeyRecordController {
 
     private AppKeyRecordService service;
@@ -30,17 +33,20 @@ public class AppKeyRecordController {
     }
 
     @GetMapping(produces = "application/json")
+    @ApiOperation(value = "Get a list of records by app")
     public List<AppKeyRecord> getAll(@PathVariable("app") String app) {
         return service.getAll(app);
     }
 
     @GetMapping(path = "/{key}", produces = "application/json")
+    @ApiOperation(value = "Get a record by app and key")
     public AppKeyRecord getOne(@PathVariable("app") String app, @PathVariable("key") String key) {
         return service.get(app, key);
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(code = HttpStatus.CREATED)
+    @ApiOperation(value = "Create a record by app")
     public AppKeyRecord createOne(
             @PathVariable("app") @AlnumSizePattern(message = "app must be alphanumeric and up to 256 characters") String app, 
             @RequestBody @Valid AppKeyRecordDTO dto) {
@@ -49,6 +55,7 @@ public class AppKeyRecordController {
 
     @DeleteMapping
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "Delete all records by app")
     public void deleteAll(
             @PathVariable("app") @AlnumSizePattern(message = "app must be alphanumeric and up to 256 characters") String app) {
         service.delete(app);
@@ -56,6 +63,7 @@ public class AppKeyRecordController {
 
     @DeleteMapping(path = "/{key}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "Delete a record by app and key")
     public void deleteOne(
             @PathVariable("app") @AlnumSizePattern(message = "app must be alphanumeric and up to 256 characters") String app,
             @PathVariable("key") @AlnumSizePattern(message = "key must be alphanumeric and up to 256 characters") String key) {

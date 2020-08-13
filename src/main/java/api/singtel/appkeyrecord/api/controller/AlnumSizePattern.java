@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE_USE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Size
+@Size(min = 1, max = 256)
 @Pattern(regexp = "^[\\p{Alnum}]*$")
 @Constraint(validatedBy = { })
 public @interface AlnumSizePattern {
