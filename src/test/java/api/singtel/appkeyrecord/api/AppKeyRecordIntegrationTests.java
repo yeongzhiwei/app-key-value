@@ -1,4 +1,4 @@
-package api.singtel.appkeyrecord.api.controller;
+package api.singtel.appkeyrecord.api;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -26,7 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import api.singtel.appkeyrecord.api.BaseRedisIntegrationTests;
 import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 import api.singtel.appkeyrecord.api.repo.AppKeyRecordRepository;
 
