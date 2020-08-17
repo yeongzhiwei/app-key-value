@@ -25,7 +25,7 @@ import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 import api.singtel.appkeyrecord.api.model.AppKeyRecordNotFoundException;
 import api.singtel.appkeyrecord.api.repo.AppKeyRecordRepository;
 
-public class AppKeyRecordServiceTests {
+class AppKeyRecordServiceTests {
 
     private AppKeyRecordService service;
 
@@ -33,7 +33,7 @@ public class AppKeyRecordServiceTests {
     @Mock private AppKeyRecordProps props;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.initMocks(this);
         service = new AppKeyRecordService(repo, props);
 
@@ -49,20 +49,20 @@ public class AppKeyRecordServiceTests {
     }
 
     @Test
-    public void getAllGivenValidAppShouldReturnRecords() throws Exception {
+    void getAllGivenValidAppShouldReturnRecords() throws Exception {
         List<AppKeyRecord> actualRecords = service.getAll("app1");
         assertEquals(2, actualRecords.size());
         assertThat(actualRecords, hasItem(hasProperty("app", is("app1"))));
     }
 
     @Test
-    public void getAllGivenInvalidAppShouldReturnEmptyList() throws Exception {
+    void getAllGivenInvalidAppShouldReturnEmptyList() throws Exception {
         List<AppKeyRecord> actualRecords = service.getAll("appDoesNotExist");
         assertEquals(0, actualRecords.size());
     }
 
     @Test
-    public void getGivenValidAppAndKeyShouldReturnRecord() throws Exception {
+    void getGivenValidAppAndKeyShouldReturnRecord() throws Exception {
         AppKeyRecord actualRecord = service.get("app1", "keyExists");
         assertAll("record",
             () -> assertEquals("app1", actualRecord.getApp()),
@@ -72,21 +72,21 @@ public class AppKeyRecordServiceTests {
     }
 
     @Test
-    public void getGivenInvalidAppAndKeyShouldThrowAppKeyRecordNotFoundException() throws Exception {
+    void getGivenInvalidAppAndKeyShouldThrowAppKeyRecordNotFoundException() throws Exception {
         assertThrows(AppKeyRecordNotFoundException.class, () -> {
             service.get("app1", "keyDoesNotExist");
         });
     }
 
     @Test
-    public void getGivenExpiredAppAndKeyShouldThrowAppKeyRecordNotFoundException() throws Exception {
+    void getGivenExpiredAppAndKeyShouldThrowAppKeyRecordNotFoundException() throws Exception {
         assertThrows(AppKeyRecordNotFoundException.class, () -> {
             service.get("app1", "keyExpired");
         });
     }
 
     @Test
-    public void createGivenValidAppAndDtoShouldReturnRecord() throws Exception {
+    void createGivenValidAppAndDtoShouldReturnRecord() throws Exception {
         AppKeyRecordDTO dto = new AppKeyRecordDTO("key1", "value1", 100);
         AppKeyRecord actualRecord = service.create("app1", dto);
         assertAll("record",
@@ -98,12 +98,12 @@ public class AppKeyRecordServiceTests {
     }
 
     @Test
-    public void deleteGivenValidAppShouldReturnNothing() throws Exception {
+    void deleteGivenValidAppShouldReturnNothing() throws Exception {
         service.delete("app1");
     }
 
     @Test
-    public void deleteAllGivenValidAppAndKeyShouldReturnNothing() throws Exception {
+    void deleteAllGivenValidAppAndKeyShouldReturnNothing() throws Exception {
         service.delete("app1", "keyExists");
     }
     

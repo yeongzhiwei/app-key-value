@@ -25,21 +25,21 @@ import api.singtel.appkeyrecord.api.model.AppKeyRecord;
 import api.singtel.appkeyrecord.api.service.AppKeyRecordService;
 
 @WebMvcTest
-public class AppKeyRecordControllerAuthTests {
+class AppKeyRecordControllerAuthTests {
 
     @MockBean AppKeyRecordService service;
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void mockServiceMethods() {
+    void mockServiceMethods() {
         AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1", 10);
         when(service.get("app1", "key1")).thenReturn(record);
         when(service.create(eq("app1"), any(AppKeyRecordDTO.class))).thenReturn(record);
     }
 
     @Test
-    public void getValidCredentialsShouldReturnOk() throws Exception {
+    void getValidCredentialsShouldReturnOk() throws Exception {
         this.mockMvc.perform(get("/apps/app1/keys/key1")
                 .with(httpBasic("testuser", "testpass")))
             .andExpect(status().isOk())
@@ -47,27 +47,27 @@ public class AppKeyRecordControllerAuthTests {
     }
 
     @Test
-    public void getNoCredentialsShouldReturnUnauthorized() throws Exception {
+    void getNoCredentialsShouldReturnUnauthorized() throws Exception {
         this.mockMvc.perform(get("/apps/app1/keys/key1"))
             .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void getInvalidUserShouldReturnUnauthorized() throws Exception {
+    void getInvalidUserShouldReturnUnauthorized() throws Exception {
         this.mockMvc.perform(get("/apps/app1/keys/key1")
                 .with(httpBasic("wronguser", "testpass")))
             .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void getInvalidPassShouldReturnUnauthorized() throws Exception {
+    void getInvalidPassShouldReturnUnauthorized() throws Exception {
         this.mockMvc.perform(get("/apps/app1/keys/key1")
                 .with(httpBasic("testuser", "wrongpass")))
             .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void postValidCredentialsShouldReturnCreated() throws Exception {       
+    void postValidCredentialsShouldReturnCreated() throws Exception {       
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key1", "value", "value1")))
@@ -77,7 +77,7 @@ public class AppKeyRecordControllerAuthTests {
     }
 
     @Test
-    public void postNoCredentialsShouldReturnUnauthorized() throws Exception {
+    void postNoCredentialsShouldReturnUnauthorized() throws Exception {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key1", "value", "value1"))))
@@ -85,7 +85,7 @@ public class AppKeyRecordControllerAuthTests {
     }
 
     @Test
-    public void postInvalidCredentialsShouldReturnUnauthorized() throws Exception {
+    void postInvalidCredentialsShouldReturnUnauthorized() throws Exception {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key1", "value", "value1")))

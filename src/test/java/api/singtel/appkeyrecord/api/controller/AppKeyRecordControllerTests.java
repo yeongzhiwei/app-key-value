@@ -29,14 +29,14 @@ import api.singtel.appkeyrecord.api.service.AppKeyRecordService;
 
 @WebMvcTest
 @WithMockUser(username = "testuser")
-public class AppKeyRecordControllerTests {
+class AppKeyRecordControllerTests {
     
     @MockBean AppKeyRecordService service;
     @Autowired private MockMvc mockMvc;
     @Autowired private ObjectMapper objectMapper;
 
     @Test
-    public void getAllValidRecordShouldReturnOk() throws Exception {
+    void getAllValidRecordShouldReturnOk() throws Exception {
         when(service.getAll("app1")).thenReturn(Arrays.asList(new AppKeyRecord("app1", "key1", "value1", 10)));
         
         this.mockMvc.perform(get("/apps/app1/keys"))
@@ -45,7 +45,7 @@ public class AppKeyRecordControllerTests {
     }
 
     @Test
-    public void getValidRecordShouldReturnOk() throws Exception {
+    void getValidRecordShouldReturnOk() throws Exception {
         when(service.get("app1", "key1")).thenReturn(new AppKeyRecord("app1", "key1", "value1", 10));
         
         this.mockMvc.perform(get("/apps/app1/keys/key1"))
@@ -54,7 +54,7 @@ public class AppKeyRecordControllerTests {
     }
 
     @Test
-    public void getInvalidRecordShouldReturnNotFound() throws Exception {
+    void getInvalidRecordShouldReturnNotFound() throws Exception {
         when(service.get("app1", "key1")).thenThrow(new AppKeyRecordNotFoundException("app1", "key1"));
 
         this.mockMvc.perform(get("/apps/app1/keys/key1"))
@@ -63,7 +63,7 @@ public class AppKeyRecordControllerTests {
     }
 
     @Test
-    public void postValidRecordShouldReturnCreated() throws Exception {
+    void postValidRecordShouldReturnCreated() throws Exception {
         when(service.create(eq("app1"), any(AppKeyRecordDTO.class))).thenReturn(new AppKeyRecord("app1", "key1", "value1", 10));
 
         this.mockMvc.perform(post("/apps/app1/keys")
@@ -74,7 +74,7 @@ public class AppKeyRecordControllerTests {
     }
 
     @Test
-    public void postInvalidAppShouldReturnBadRequest() throws Exception {
+    void postInvalidAppShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1@/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key1", "value", "value1"))))
@@ -83,7 +83,7 @@ public class AppKeyRecordControllerTests {
     }
     
     @Test
-    public void postInvalidKeyShouldReturnBadRequest() throws Exception {
+    void postInvalidKeyShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key1@", "value", "value1"))))
@@ -92,7 +92,7 @@ public class AppKeyRecordControllerTests {
     }
     
     @Test
-    public void postBlankKeyShouldReturnBadRequest() throws Exception {
+    void postBlankKeyShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "", "value", "value1"))))
@@ -101,7 +101,7 @@ public class AppKeyRecordControllerTests {
     }
     
     @Test
-    public void postMissingKeyShouldReturnBadRequest() throws Exception {
+    void postMissingKeyShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("value", "value1"))))
@@ -110,7 +110,7 @@ public class AppKeyRecordControllerTests {
     }
     
     @Test
-    public void postBlankValueShouldReturnBadRequest() throws Exception {
+    void postBlankValueShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key1", "value", ""))))
@@ -119,7 +119,7 @@ public class AppKeyRecordControllerTests {
     }
 
     @Test
-    public void postMissingValueShouldReturnBadRequest() throws Exception {
+    void postMissingValueShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key1"))))
@@ -128,25 +128,25 @@ public class AppKeyRecordControllerTests {
     }
 
     @Test
-    public void deleteValidAppShouldReturnNoContent() throws Exception {
+    void deleteValidAppShouldReturnNoContent() throws Exception {
         this.mockMvc.perform(delete("/apps/app1/keys"))
             .andExpect(status().isNoContent());
     }
 
     @Test
-    public void deleteInvalidAppShouldReturnBadRequest() throws Exception {
+    void deleteInvalidAppShouldReturnBadRequest() throws Exception {
         this.mockMvc.perform(delete("/apps/app1@/keys"))
             .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void deleteValidAppAndKeyShouldReturnNoContent() throws Exception {
+    void deleteValidAppAndKeyShouldReturnNoContent() throws Exception {
         this.mockMvc.perform(delete("/apps/app1/keys/key1"))
             .andExpect(status().isNoContent());
     }
 
     @Test
-    public void deleteInvalidKeyShouldReturBadRequest() throws Exception {
+    void deleteInvalidKeyShouldReturBadRequest() throws Exception {
         this.mockMvc.perform(delete("/apps/app1/keys/key1@"))
             .andExpect(status().isBadRequest());
     }

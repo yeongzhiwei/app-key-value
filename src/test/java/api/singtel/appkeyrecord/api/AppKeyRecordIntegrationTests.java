@@ -31,26 +31,26 @@ import api.singtel.appkeyrecord.api.repo.AppKeyRecordRepository;
 
 @AutoConfigureMockMvc
 @WithMockUser(username = "testuser")
-public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
+class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
     
     @Autowired private MockMvc mockMvc;
     @Autowired private AppKeyRecordRepository repository;
     @Autowired private ObjectMapper objectMapper;
 
     @BeforeEach
-    public void seedData() {
+    void seedData() {
         repository.save(new AppKeyRecord("app1", "key1", "value1", 1));
         repository.save(new AppKeyRecord("app1", "key2", "value2", 10));
         repository.save(new AppKeyRecord("app2", "key1", "value3", 10));
     }
 
     @AfterEach
-    public void removeData() {
+    void removeData() {
         repository.deleteAll();
     }
     
     @Test
-    public void getAllValidRecordShouldReturnOkWithData() throws Exception {
+    void getAllValidRecordShouldReturnOkWithData() throws Exception {
         String json = this.mockMvc.perform(get("/apps/app1/keys"))
             .andExpect(status().isOk())
             .andReturn()
@@ -64,14 +64,14 @@ public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
     }
 
     @Test
-    public void getAllNoRecordShouldReturnOkWithEmptyList() throws Exception {
+    void getAllNoRecordShouldReturnOkWithEmptyList() throws Exception {
         this.mockMvc.perform(get("/apps/noSuchApp/keys"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.length()").value(0));
     }
 
     @Test
-    public void getOneValidRecordShouldReturnOkWithData() throws Exception {
+    void getOneValidRecordShouldReturnOkWithData() throws Exception {
         this.mockMvc.perform(get("/apps/app1/keys/key1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.app").value("app1"))
@@ -81,13 +81,13 @@ public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
     }
     
     @Test
-    public void getOneInvalidRecordShouldReturnNotFound() throws Exception {
+    void getOneInvalidRecordShouldReturnNotFound() throws Exception {
         this.mockMvc.perform(get("/apps/app1/keys/noSuchKey"))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    public void postRecordShouldReturnOkWithData() throws Exception {
+    void postRecordShouldReturnOkWithData() throws Exception {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key3", "value", "value3", "ttl", 3))))
@@ -101,7 +101,7 @@ public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
     }
     
     @Test
-    public void postRecordNoTtlShouldReturnOkWithDataDefaultTtl() throws Exception {
+    void postRecordNoTtlShouldReturnOkWithDataDefaultTtl() throws Exception {
         this.mockMvc.perform(post("/apps/app1/keys")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("key", "key4", "value", "value4"))))
@@ -115,7 +115,7 @@ public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
     }
     
     @Test
-    public void deleteAllValidAppShouldReturnOkWithNoContent() throws Exception {
+    void deleteAllValidAppShouldReturnOkWithNoContent() throws Exception {
         this.mockMvc.perform(delete("/apps/app1/keys"))
             .andExpect(status().isNoContent());
 
@@ -123,13 +123,13 @@ public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
     }
 
     @Test
-    public void deleteAllNoRecordShouldReturnOkWithNoContent() throws Exception {
+    void deleteAllNoRecordShouldReturnOkWithNoContent() throws Exception {
         this.mockMvc.perform(delete("/apps/noSuchApp/keys"))
             .andExpect(status().isNoContent());
     }
 
     @Test
-    public void deleteOneValidAppAndKeyShouldReturnOkWithNoContent() throws Exception {
+    void deleteOneValidAppAndKeyShouldReturnOkWithNoContent() throws Exception {
         this.mockMvc.perform(delete("/apps/app1/keys/key1"))
             .andExpect(status().isNoContent());
 
@@ -137,7 +137,7 @@ public class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
     }
 
     @Test
-    public void deleteOneNoRecordShouldReturnOkWithNoContent() throws Exception {
+    void deleteOneNoRecordShouldReturnOkWithNoContent() throws Exception {
         this.mockMvc.perform(delete("/apps/app1/keys/noSuchKey"))
             .andExpect(status().isNoContent());
     }

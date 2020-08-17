@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class AppKeyRecordTests {
+class AppKeyRecordTests {
 
     @Test
-    public void createRecordShouldReturnObject() {
+    void createRecordShouldReturnObject() {
         AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1", 10);
 
         assertAll("record", 
@@ -18,7 +18,7 @@ public class AppKeyRecordTests {
         );
     }
 
-    public void setPropertiesShouldUpdateProperties() {
+    void setPropertiesShouldUpdateProperties() {
         AppKeyRecord record = new AppKeyRecord("app1", "key1", "value1", 10);
 
         record.setApp("app2");

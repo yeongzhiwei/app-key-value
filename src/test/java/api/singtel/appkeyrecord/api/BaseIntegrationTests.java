@@ -9,6 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @TestInstance(Lifecycle.PER_CLASS)
-public class BaseIntegrationTests {
+class BaseIntegrationTests {
     
 }
