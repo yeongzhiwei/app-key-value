@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -99,12 +100,16 @@ class AppKeyRecordServiceTests {
 
     @Test
     void deleteGivenValidAppShouldReturnNothing() throws Exception {
-        service.delete("app1");
+        assertDoesNotThrow(() -> {
+            service.delete("app1");
+        });
     }
 
     @Test
     void deleteAllGivenValidAppAndKeyShouldReturnNothing() throws Exception {
-        service.delete("app1", "keyExists");
+        assertDoesNotThrow(() -> {
+            service.delete("app1", "keyExists");
+        });
     }
     
 }

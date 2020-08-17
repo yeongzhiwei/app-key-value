@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -119,7 +120,7 @@ class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
         this.mockMvc.perform(delete("/apps/app1/keys"))
             .andExpect(status().isNoContent());
 
-        assertTrue(repository.findAllByApp("app1").size() == 0);
+        assertEquals(0, repository.findAllByApp("app1").size());
     }
 
     @Test
@@ -133,7 +134,7 @@ class AppKeyRecordIntegrationTests extends BaseRedisIntegrationTests {
         this.mockMvc.perform(delete("/apps/app1/keys/key1"))
             .andExpect(status().isNoContent());
 
-        assertTrue(repository.findAllByAppAndKey("app1", "key1").size() == 0);
+        assertEquals(0, repository.findAllByAppAndKey("app1", "key1").size());
     }
 
     @Test

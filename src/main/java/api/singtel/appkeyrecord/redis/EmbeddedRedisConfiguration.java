@@ -1,7 +1,5 @@
 package api.singtel.appkeyrecord.redis;
 
-import java.io.IOException;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
@@ -22,7 +20,7 @@ public class EmbeddedRedisConfiguration {
     }
 
     @PostConstruct
-    public void startRedis() throws IOException {
+    public void startRedis() {
         if (enabled) {
             redisServer = new RedisServer(redisPort);
             redisServer.start();
