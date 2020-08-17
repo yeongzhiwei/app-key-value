@@ -128,6 +128,15 @@ class AppKeyRecordControllerTests {
     }
 
     @Test
+    void postInvalidJSONShouldReturnBadRequest() throws Exception {
+        this.mockMvc.perform(post("/apps/app1/keys")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("Not a JSON content"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(containsString("Could not parse JSON")));
+    }
+
+    @Test
     void deleteValidAppShouldReturnNoContent() throws Exception {
         this.mockMvc.perform(delete("/apps/app1/keys"))
             .andExpect(status().isNoContent());
